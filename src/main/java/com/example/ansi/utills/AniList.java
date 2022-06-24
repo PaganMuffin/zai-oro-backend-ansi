@@ -16,7 +16,7 @@ public class AniList {
 
     static String GraphQLURL = "https://graphql.anilist.co";
 
-    public static String searchByTitle(String q, String p) throws UnirestException {
+    public static String searchByTitle(String q, Integer p) throws UnirestException {
         String GraphQLQuery = """
                     query ($id: Int, $page: Int, $perPage: Int, $search: String) {
                     Page (page: $page, perPage: $perPage) {

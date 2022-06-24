@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SeriesController {
     @GetMapping("/search")
-    public String searchAniList(@RequestParam String q, @RequestParam(required = false) String p) throws UnirestException {
-        p = p == null ? "1" : p;
+    public String searchAniList(@RequestParam String q, @RequestParam(required = false) Integer p) throws UnirestException {
+        p = p == null ? 1 : p;
         return AniList.searchByTitle(q,p);
     }
 }
