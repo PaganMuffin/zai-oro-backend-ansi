@@ -70,23 +70,23 @@ public class AniList {
     //GET by ID
     public static AniListEntry getById(Integer id) throws UnirestException {
         String GraphQLQuery = """
-            query ($id: Int) {
-                Media (id: $id) {
-                  id
-                  idMal
-                  title {
-                    romaji
-                  }
-                  coverImage{
-                    medium
-                  }
-                  type
-                  season
-                  seasonYear
-                  description
-                  episodes
-                }
-            }""";
+                query ($id: Int) {
+                    Media (id: $id) {
+                      id
+                      idMal
+                      title {
+                        romaji
+                      }
+                      coverImage{
+                        medium
+                      }
+                      type
+                      season
+                      seasonYear
+                      description
+                      episodes
+                    }
+                }""";
 
         JSONObject variables = new JSONObject();
         variables.put("id", id);
@@ -101,6 +101,9 @@ public class AniList {
                 .body(body.toJSONString())
                 .asJson();
 
+        if (response.getStatus() != 200) {
+            return null;
+        }
         //response to java class
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(response.getBody().toString(), Response.class).getData().getMedia();

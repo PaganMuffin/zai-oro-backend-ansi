@@ -1,6 +1,7 @@
 package com.example.ansi.service;
 
 import com.example.ansi.model.AddRequestModel;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,5 +13,5 @@ public interface SeriesService {
     ResponseEntity<?> getSeries(String q, Integer p);
 
 
-    ResponseEntity<?> add(AddRequestModel addRequestModel, MultipartFile file, HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<?> add(AddRequestModel addRequestModel, MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException;
 }

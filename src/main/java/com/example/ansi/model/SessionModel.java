@@ -17,6 +17,7 @@ public class SessionModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @Getter
     private UserModel user;
 
     public SessionModel(UserModel databaseUserModel) {

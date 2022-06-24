@@ -42,4 +42,7 @@ public class Utills {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
+    public static Long getUnixTime() {
+        return (System.currentTimeMillis() / 1000L);
+    }
 }
