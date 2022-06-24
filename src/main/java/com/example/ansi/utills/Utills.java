@@ -20,7 +20,6 @@ public class Utills {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
         headers.add("Content-Type", "application/json");
-        headers.add("Authorization", "Bearer " + token);
         return new ResponseEntity<>(body, headers, status);
     }
 

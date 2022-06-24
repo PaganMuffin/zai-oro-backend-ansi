@@ -1,6 +1,7 @@
 package com.example.ansi.model;
 
 import com.example.ansi.utills.Utills;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.catalina.User;
@@ -23,8 +24,9 @@ public class SubtitleEntry {
     private Long createdAt;
 
     @Getter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", nullable = false)
+    @JsonIgnore
     private SeriesModel series;
 
     @Getter
@@ -34,8 +36,9 @@ public class SubtitleEntry {
     private String author;
 
     @Getter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private UserModel user;
 
     @Getter
