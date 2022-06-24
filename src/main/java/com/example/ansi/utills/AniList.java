@@ -1,5 +1,7 @@
 package com.example.ansi.utills;
 
+import com.example.ansi.model.anilist.AniListEntry;
+import com.example.ansi.model.anilist.Response;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -66,6 +68,42 @@ public class AniList {
     }
 
     //GET by ID
+    public static AniListEntry getById(Integer id) throws UnirestException {
+        String GraphQLQuery = """
+            query ($id: Int) {
+                Media (id: $id) {
+                  id
+                  idMal
+                  title {
+                    english
+                  }
+                  coverImage{
+                    medium
+                  }
+                  type
+                  season
+                  seasonYear
+                  description
+                  episodes
+                }
+            }""";
 
+        JSONObject variables = new JSONObject();
+        variables.put("id", id);
+
+        JSONObject body = new JSONObject();
+        body.put("query", GraphQLQuery);
+        body.put("variables", variables);
+
+        HttpResponse<JsonNode> response = Unirest.post(GraphQLURL)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .body(body.toJSONString())
+                .asJson();
+
+        //response to java class
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(response.getBody().toString(), Response.class).getData().getMedia();
+    }
 
 }
