@@ -42,7 +42,7 @@ public class AuthController {
 
         if(!email.contains("@")) {
             jsonObject.put("message", "Email is not valid");
-            return Utills.buildResponse(jsonObject.toJSONString(), 400, null);
+            return Utills.buildResponse(jsonObject, 400, null);
         }
         String username = user.getUsername();
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -56,7 +56,7 @@ public class AuthController {
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         response.addCookie(cookie);
         jsonObject.put("message", "User created successfully");
-        return Utills.buildResponse(jsonObject.toJSONString(), 201, sessionModel.getId());
+        return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
     }
 
     @PostMapping("/login")
@@ -66,13 +66,13 @@ public class AuthController {
         if(databaseUserModel == null) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "User not found");
-            return Utills.buildResponse(jsonObject.toJSONString(), 404, null);
+            return Utills.buildResponse(jsonObject, 404, null);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(user.getPassword(), databaseUserModel.getPassword())) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "Password is incorrect");
-            return Utills.buildResponse(jsonObject.toJSONString(), 401, null);
+            return Utills.buildResponse(jsonObject, 401, null);
         }
 
         SessionModel sessionModel = new SessionModel(databaseUserModel);
@@ -92,14 +92,14 @@ public class AuthController {
         if(!deleted) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "User not logged in");
-            return Utills.buildResponse(jsonObject.toJSONString(), 401, null);
+            return Utills.buildResponse(jsonObject, 401, null);
         }
         Cookie cookie = new Cookie("sessionId", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("message", "User logged out");
-        return Utills.buildResponse(jsonObject.toJSONString(), 200, null);
+        return Utills.buildResponse(jsonObject, 200, null);
 
     }
 
@@ -111,11 +111,11 @@ public class AuthController {
         JSONObject jsonObject = new JSONObject();
         if(sessionModel == null) {
             jsonObject.put("message", "User not logged in");
-            return Utills.buildResponse(jsonObject.toJSONString(), 401, null);
+            return Utills.buildResponse(jsonObject, 401, null);
         }
 
         jsonObject.put("message", "User logged in");
-        return Utills.buildResponse(jsonObject.toJSONString(), 200, sessionModel.getId());
+        return Utills.buildResponse(jsonObject, 200, sessionModel.getId());
     }
 
 }

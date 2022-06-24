@@ -41,13 +41,7 @@ public class SeriesController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(AddRequestModel addRequestModel, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
-
-
-
-
-
-
-        return Utills.buildResponse("",200,"200");
+        return seriesService.add(addRequestModel, file, request, response);
     }
 
 
