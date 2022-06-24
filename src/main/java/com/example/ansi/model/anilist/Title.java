@@ -9,18 +9,18 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "titles")
-public class Title{
+public class Title {
 
-	@Id
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-	@Column(length = 36, nullable = false, updatable = false, insertable = false)
-	@Getter
-	private String id;
+    @Id
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false, insertable = false)
+    @Getter
+    private String id;
 
-	@SerializedName("romaji")
-	@Getter
-	@Setter
-	private String romaji;
+    @SerializedName("romaji")
+    @Getter
+    @Setter
+    private String romaji;
 
 }

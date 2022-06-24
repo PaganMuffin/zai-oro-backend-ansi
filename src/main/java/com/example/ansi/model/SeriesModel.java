@@ -3,6 +3,8 @@ package com.example.ansi.model;
 
 import com.example.ansi.model.anilist.CoverImage;
 import com.example.ansi.model.anilist.Title;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.w3c.dom.Text;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "series")
@@ -62,6 +65,10 @@ public class SeriesModel {
     @Setter
     @Getter
     private int episodes;
+
+    @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
+    @Getter
+    private Set<SubtitleEntry> entries;
 
     public SeriesModel() {
     }
