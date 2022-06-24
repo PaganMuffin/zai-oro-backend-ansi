@@ -75,7 +75,7 @@ public class AniList {
                   id
                   idMal
                   title {
-                    english
+                    romaji
                   }
                   coverImage{
                     medium
