@@ -15,6 +15,7 @@ public class FileModel {
     @Getter
     private String id;
 
+    @Getter
     private String filename;
 
     @ManyToOne
