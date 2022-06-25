@@ -31,8 +31,11 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("/searchAniList")
-    public String searchAniList(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
+    public String searchAniList(@RequestParam(required = false) String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
         p = p == null ? 1 : p;
+        if(q == null || q.equals("")) {
+            return AniList.getFirstsRecords(p);
+        }
         return AniList.searchByTitle(q, p);
     }
 

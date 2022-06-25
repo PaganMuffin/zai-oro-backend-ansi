@@ -16,6 +16,56 @@ public class AniList {
 
     static String GraphQLURL = "https://graphql.anilist.co";
 
+    public static String getFirstsRecords(Integer p) throws UnirestException {
+        String GraphQLQuery = """
+                    query ($id: Int, $page: Int, $perPage: Int) {
+                    Page (page: $page, perPage: $perPage) {
+                        pageInfo {
+                            total
+                                    currentPage
+                            lastPage
+                                    hasNextPage
+                            perPage
+                        }
+                        media (id: $id, type: ANIME) {
+                            id
+                            idMal
+                            title {
+                                romaji
+                            }
+                            coverImage{
+                                medium
+                            }
+                            type
+                                    season
+                            seasonYear
+                                    description
+                            episodes
+                        }
+                    }
+                }""";
+
+        JSONObject variables = new JSONObject();
+        variables.put("page", p);
+        variables.put("perPage", 10);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("query", GraphQLQuery);
+        jsonObject.put("variables", variables);
+
+        HttpResponse<JsonNode> response = Unirest.post(GraphQLURL)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .body(jsonObject.toJSONString())
+                .asJson();
+
+        //Prettifying
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(response.getBody().toString());
+        return gson.toJson(je);
+    }
+
     public static String searchByTitle(String q, Integer p) throws UnirestException {
         String GraphQLQuery = """
                     query ($id: Int, $page: Int, $perPage: Int, $search: String) {
