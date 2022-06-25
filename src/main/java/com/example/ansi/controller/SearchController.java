@@ -36,12 +36,15 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchDB(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
+    public ResponseEntity<?> searchDB(@RequestParam String q,
+                                      @RequestParam(required = false) Integer p,
+                                      @RequestParam(required = false) Integer limit,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) throws UnirestException {
         p = p == null ? 1 : p;
-        List<SearchSubtitleEntryModel> result = searchService.search(q, p);
-        JSONObject body = new JSONObject();
-        body.put("result", result);
-        return Utills.buildResponse(body, 200, "");
+        limit = limit == null ? 10 : limit;
+        JSONObject result = searchService.search(q, p, limit);
+        return Utills.buildResponse(result, 200, "");
     }
 
 
