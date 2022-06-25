@@ -1,5 +1,6 @@
 package com.example.ansi.model;
 
+import com.example.ansi.model.mapped.BaseSubtitleEntry;
 import com.example.ansi.utills.Utills;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -12,44 +13,14 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "subtitles")
-public class SubtitleEntry {
-    @Id
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-    @Column(length = 36, nullable = false, updatable = false, insertable = false)
-    @Getter
-    private String id;
+public class SubtitleEntry extends BaseSubtitleEntry<SubtitleEntry> {
+
 
     @Getter
-    private Long createdAt;
-
-    @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "series_id", nullable = false)
     @JsonIgnore
     private SeriesModel series;
-
-    @Getter
-    private Long updatedAt;
-
-    @Getter
-    private String author;
-
-    @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private UserModel user;
-
-    @Getter
-    private Integer episode;
-
-    @Getter
-    private String Description;
-
-    @Getter
-    private String filename;
-
 
     public SubtitleEntry() {
 

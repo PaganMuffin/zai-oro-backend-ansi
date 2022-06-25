@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface SubtitleRepository extends JpaRepository<SubtitleEntry, Long> {
+public interface SearchRepository extends JpaRepository<SearchSubtitleEntryModel, Long> {
 
     @Query("SELECT s FROM SearchSubtitleEntryModel s WHERE s.series.title.romaji LIKE %?1%")
     List<SearchSubtitleEntryModel> searchAllBySeriesTitleRomaji(String title);
