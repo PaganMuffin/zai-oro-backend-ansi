@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SeriesRepository extends JpaRepository<SeriesModel, Long> {
 
+    SeriesModel getById(String id);
+
     SeriesModel getByAlId(Integer alId);
 }

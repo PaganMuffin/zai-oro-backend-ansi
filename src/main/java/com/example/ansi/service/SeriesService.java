@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface SeriesService {
-    ResponseEntity<?> getSeries(String q, Integer p);
+    ResponseEntity<?> getSeries(String seriesId, HttpServletRequest request, HttpServletResponse response);
 
 
     ResponseEntity<?> add(AddRequestModel addRequestModel, MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException;

@@ -9,7 +9,9 @@ import com.example.ansi.repository.SessionRepository;
 import com.example.ansi.repository.SubtitleRepository;
 import com.example.ansi.utills.AniList;
 import com.example.ansi.utills.Utills;
+import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jdk.jshell.execution.Util;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +41,15 @@ public class SeriesServiceImp implements SeriesService {
     private StorageService storageService;
 
     @Override
-    public ResponseEntity<?> getSeries(String q, Integer p) {
-        return null;
+    public ResponseEntity<?> getSeries(String seriesId, HttpServletRequest request, HttpServletResponse response) {
+        SeriesModel series = seriesRepository.getById(seriesId);
+        JSONObject body = new JSONObject();
+        if (series == null) {
+            body.put("error", "Series not found");
+            return Utills.buildResponse(body, 404, "");
+        }
+        body.put("series", series);
+        return Utills.buildResponse(body, 200, "");
     }
 
     @Override

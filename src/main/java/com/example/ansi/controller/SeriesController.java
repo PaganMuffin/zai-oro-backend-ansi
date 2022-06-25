@@ -9,10 +9,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,23 +22,15 @@ public class SeriesController {
 
     @Autowired
     private SeriesService seriesService;
-
-    @GetMapping("/searchAniList")
-    public String searchAniList(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
-        p = p == null ? 1 : p;
-        return AniList.searchByTitle(q, p);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> searchDB(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
-        p = p == null ? 1 : p;
-        return seriesService.getSeries(q, p);
-    }
-
-
+    
     @PostMapping("/add")
     public ResponseEntity<?> add(AddRequestModel addRequestModel, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
         return seriesService.add(addRequestModel, file, request, response);
+    }
+
+    @GetMapping("/series/{id}")
+    public ResponseEntity<?> getSeries(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
+        return seriesService.getSeries(id, request, response);
     }
 
 
