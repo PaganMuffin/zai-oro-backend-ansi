@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TermVector;
 
 import javax.persistence.*;
 
@@ -18,9 +21,9 @@ public class Title {
     @Getter
     private String id;
 
-    @SerializedName("romaji")
     @Getter
     @Setter
+    @SerializedName("romaji")
     private String romaji;
 
 }

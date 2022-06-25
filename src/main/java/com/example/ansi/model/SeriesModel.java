@@ -3,6 +3,7 @@ package com.example.ansi.model;
 
 import com.example.ansi.model.anilist.CoverImage;
 import com.example.ansi.model.anilist.Title;
+import com.example.ansi.model.mapped.BaseSeriesModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -16,59 +17,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "series")
-public class SeriesModel {
+public class SeriesModel extends BaseSeriesModel<SeriesModel> {
 
-    @Id
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-    @Column(length = 36, nullable = false, updatable = false, insertable = false)
+    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     @Getter
-    private String id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cover_id")
-    @Getter
-    @Setter
-    private CoverImage coverImage;
-
-    @Getter
-    @Setter
-    private String season;
-
-    @Getter
-    @Setter
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Getter
-    @Setter
-    private int alId;
-
-    @Getter
-    @Setter
-    private int idMal;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "title_id")
-    @Setter
-    @Getter
-    private Title title;
-
-    @Setter
-    @Getter
-    private String type;
-
-    @Setter
-    @Getter
-    private int seasonYear;
-
-    @Setter
-    @Getter
-    private int episodes;
-
-    @OneToMany(mappedBy = "series", fetch = FetchType.EAGER)
-    @Getter
-    private Set<SubtitleEntry> entries;
+    protected Set<SubtitleEntry> entries;
 
     public SeriesModel() {
     }

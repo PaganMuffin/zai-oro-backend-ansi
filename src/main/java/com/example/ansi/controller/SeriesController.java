@@ -22,20 +22,7 @@ public class SeriesController {
 
     @Autowired
     private SeriesService seriesService;
-
-    @GetMapping("/searchAniList")
-    public String searchAniList(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
-        p = p == null ? 1 : p;
-        return AniList.searchByTitle(q, p);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> searchDB(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
-        p = p == null ? 1 : p;
-        return null;
-    }
-
-
+    
     @PostMapping("/add")
     public ResponseEntity<?> add(AddRequestModel addRequestModel, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
         return seriesService.add(addRequestModel, file, request, response);
