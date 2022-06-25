@@ -45,7 +45,12 @@ public class AuthController {
         String username = user.getUsername();
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserModel databaseUserModel = new UserModel(email,password, username);
-        userRepository.save(databaseUserModel);
+        try{
+            userRepository.save(databaseUserModel);
+        } catch (Exception e) {
+            jsonObject.put("message", "User already exists");
+            return Utills.buildResponse(jsonObject, 400, null);
+        }
 
 
         SessionModel sessionModel = new SessionModel(databaseUserModel);
@@ -54,6 +59,7 @@ public class AuthController {
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         response.addCookie(cookie);
         jsonObject.put("message", "User created successfully");
+        jsonObject.put("user", databaseUserModel.getId());
         return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
     }
 
@@ -61,14 +67,13 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody RegisterLoginModel user, HttpServletRequest request, HttpServletResponse response) {
 
         UserModel databaseUserModel = userRepository.findByEmail(user.getEmail());
+        JSONObject jsonObject = new JSONObject();
         if(databaseUserModel == null) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "User not found");
             return Utills.buildResponse(jsonObject, 404, null);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(user.getPassword(), databaseUserModel.getPassword())) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "Password is incorrect");
             return Utills.buildResponse(jsonObject, 401, null);
         }
@@ -78,7 +83,9 @@ public class AuthController {
 
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         response.addCookie(cookie);
-        return Utills.buildResponse(null, 200, sessionModel.getId());
+        jsonObject.put("message", "User logged in successfully");
+        jsonObject.put("user", databaseUserModel.getId());
+        return Utills.buildResponse(jsonObject, 200, sessionModel.getId());
 
     }
 
