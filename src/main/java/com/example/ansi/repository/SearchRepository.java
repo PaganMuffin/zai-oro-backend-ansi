@@ -14,4 +14,6 @@ public interface SearchRepository extends JpaRepository<SearchSubtitleEntryModel
 
     @Query("SELECT s FROM SearchSubtitleEntryModel s WHERE s.series.title.romaji LIKE %?1%")
     Page<SearchSubtitleEntryModel> searchAllBySeriesTitleRomaji(String title, Pageable pageReq);
+
+    SearchSubtitleEntryModel findById(String id);
 }
