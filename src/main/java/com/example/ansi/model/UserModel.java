@@ -2,6 +2,7 @@ package com.example.ansi.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
@@ -19,10 +20,11 @@ public class UserModel {
 
     @Getter
     @Column(name = "email", unique = true, nullable = false)
-
+    @JsonIgnore
     private String email;
 
     @Getter
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -30,7 +32,12 @@ public class UserModel {
     @Column(name = "username", nullable = false)
     private String username;
 
+    @Getter
+    @Column(name = "avatar", nullable = true)
+    private String avatar;
+
     @OneToMany(mappedBy="user")
+    @JsonIgnore
     private Set<SessionModel> sessions;
 
 

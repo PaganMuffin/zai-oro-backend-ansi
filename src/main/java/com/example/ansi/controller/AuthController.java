@@ -9,10 +9,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.ansi.model.RegisterLoginModel;
 import com.example.ansi.model.UserModel;
 
@@ -22,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
+@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
 public class AuthController {
 
 
@@ -32,7 +30,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterLoginModel user, HttpServletResponse response) {
+    public ResponseEntity<?> register(@RequestBody RegisterLoginModel user, HttpServletResponse response, HttpServletRequest request) {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String password = encoder.encode(user.getPassword());
@@ -47,7 +45,12 @@ public class AuthController {
         String username = user.getUsername();
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserModel databaseUserModel = new UserModel(email,password, username);
-        userRepository.save(databaseUserModel);
+        try{
+            userRepository.save(databaseUserModel);
+        } catch (Exception e) {
+            jsonObject.put("message", "User already exists");
+            return Utills.buildResponse(jsonObject, 400, null);
+        }
 
 
         SessionModel sessionModel = new SessionModel(databaseUserModel);
@@ -55,7 +58,13 @@ public class AuthController {
 
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         response.addCookie(cookie);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        cookie.setSecure(true);
+        cookie.setDomain(request.getServerName());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
         jsonObject.put("message", "User created successfully");
+        jsonObject.put("user", databaseUserModel.getId());
         return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
     }
 
@@ -63,14 +72,13 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody RegisterLoginModel user, HttpServletRequest request, HttpServletResponse response) {
 
         UserModel databaseUserModel = userRepository.findByEmail(user.getEmail());
+        JSONObject jsonObject = new JSONObject();
         if(databaseUserModel == null) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "User not found");
             return Utills.buildResponse(jsonObject, 404, null);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(user.getPassword(), databaseUserModel.getPassword())) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "Password is incorrect");
             return Utills.buildResponse(jsonObject, 401, null);
         }
@@ -79,8 +87,15 @@ public class AuthController {
         sessionRepository.save(sessionModel);
 
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        cookie.setSecure(true);
+        cookie.setDomain(request.getServerName());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
         response.addCookie(cookie);
-        return Utills.buildResponse(null, 200, sessionModel.getId());
+        jsonObject.put("message", "User logged in successfully");
+        jsonObject.put("user", databaseUserModel.getId());
+        return Utills.buildResponse(jsonObject, 200, sessionModel.getId());
 
     }
 

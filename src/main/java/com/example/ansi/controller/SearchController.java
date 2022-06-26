@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
 public class SearchController {
 
     @Autowired
@@ -30,17 +31,21 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("/searchAniList")
-    public String searchAniList(@RequestParam String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
+    public String searchAniList(@RequestParam(required = false) String q, @RequestParam(required = false) Integer p, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
         p = p == null ? 1 : p;
+        if(q == null || q.equals("")) {
+            return AniList.getFirstsRecords(p);
+        }
         return AniList.searchByTitle(q, p);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchDB(@RequestParam String q,
+    public ResponseEntity<?> searchDB(@RequestParam(required = false) String q,
                                       @RequestParam(required = false) Integer p,
                                       @RequestParam(required = false) Integer limit,
                                       HttpServletRequest request,
                                       HttpServletResponse response) throws UnirestException {
+        q = q == null ? "" : q;
         p = p == null ? 1 : p;
         limit = limit == null ? 10 : limit;
         JSONObject result = searchService.search(q, p, limit);
