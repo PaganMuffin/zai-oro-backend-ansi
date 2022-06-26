@@ -26,7 +26,7 @@ public class CommentModel {
     private Long createdAt;
 
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
@@ -35,8 +36,9 @@ public class CommentsController {
 
     //id is the id of the entry
     @GetMapping("/comments/{id}")
-    public String getComments(@PathVariable String id) {
-        return null;
+    public List<CommentModel> getComments(@PathVariable String id) {
+        List<CommentModel> comments = commentRepository.findByEntrieId(id);
+        return comments;
 
     }
 
