@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
 public class AuthController {
 
 
@@ -30,7 +30,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterLoginModel user, HttpServletResponse response) {
+    public ResponseEntity<?> register(@RequestBody RegisterLoginModel user, HttpServletResponse response, HttpServletRequest request) {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String password = encoder.encode(user.getPassword());
@@ -58,6 +58,11 @@ public class AuthController {
 
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         response.addCookie(cookie);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        cookie.setSecure(true);
+        cookie.setDomain(request.getServerName());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
         jsonObject.put("message", "User created successfully");
         jsonObject.put("user", databaseUserModel.getId());
         return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
@@ -82,6 +87,11 @@ public class AuthController {
         sessionRepository.save(sessionModel);
 
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        cookie.setSecure(true);
+        cookie.setDomain(request.getServerName());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
         response.addCookie(cookie);
         jsonObject.put("message", "User logged in successfully");
         jsonObject.put("user", databaseUserModel.getId());
