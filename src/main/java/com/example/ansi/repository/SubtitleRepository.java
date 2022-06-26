@@ -11,4 +11,6 @@ public interface SubtitleRepository extends JpaRepository<SubtitleEntry, Long> {
 
     @Query("SELECT s FROM SearchSubtitleEntryModel s WHERE s.series.title.romaji LIKE %?1%")
     List<SearchSubtitleEntryModel> searchAllBySeriesTitleRomaji(String title);
+
+    SubtitleEntry findById(String id);
 }

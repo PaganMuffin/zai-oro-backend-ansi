@@ -1,7 +1,9 @@
 package com.example.ansi.model;
 
+import com.example.ansi.utills.Utills;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -24,13 +26,27 @@ public class CommentModel {
     private Long createdAt;
 
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserModel model;
+    private UserModel user;
 
     @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entry_id", nullable = false)
     @JsonIgnore
-    private SubtitleEntry entries;
+    private SubtitleEntry entrie;
+
+
+    public CommentModel() {
+
+    }
+
+    public CommentModel(String content, UserModel user, SubtitleEntry entrie) {
+        this.content = content;
+        this.user = user;
+        this.entrie = entrie;
+        this.createdAt = Utills.getUnixTime();
+    }
+
+
 }
