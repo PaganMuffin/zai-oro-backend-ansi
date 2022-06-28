@@ -42,7 +42,7 @@ public class UserModel {
     @ColumnDefault("user")
     private String role;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<SessionModel> sessions;
 

@@ -8,13 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional
 public interface SubtitleRepository extends JpaRepository<SubtitleEntry, Long> {
 
     SubtitleEntry findById(String id);
 
     SubtitleEntry findByIdAndUserId (String id, String userId);
 
+    SubtitleEntry deleteById(String id);
+
+    Integer deleteByUserId(String userId);
     @Modifying
     @Transactional
     @Query("UPDATE SubtitleEntry SET episode = ?2, Description = ?3, author = ?4, filename = ?5, updatedAt = ?6 WHERE id = ?1")
