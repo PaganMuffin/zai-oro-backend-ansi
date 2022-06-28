@@ -222,5 +222,30 @@ public class AdminController {
 
 
     //update user
+    @PutMapping("/admin/users/{id}")
+    public ResponseEntity<?> AdminUserUpdate(@RequestBody UserAdminUpdateModel user, @PathVariable String id,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) throws UnirestException {
+        //CHECK IF USER IS ADMIN
+        JSONObject body = new JSONObject();
+        String sessionId = Utills.getSessionId(request);
+        SessionModel session = sessionRepository.findById(sessionId);
+        if (session == null || !session.getUser().getRole().equals("admin")) {
+            body.put("message", "Unauthorized");
+            return Utills.buildResponse(body, 401, "");
+        }
+        UserModel userModel = userRepository.findById(id);
+        if (userModel == null) {
+            body.put("message", "User not found");
+            return Utills.buildResponse(body, 404, "");
+        }
+
+        userRepository.updateUser(id, user.getUsername(), user.getEmail(), user.getRole());
+
+
+        body.put("message", "Updated");
+        return Utills.buildResponse(body, 200, "");
+
+    }
 
 }
