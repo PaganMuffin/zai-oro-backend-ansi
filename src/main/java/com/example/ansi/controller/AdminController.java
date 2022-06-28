@@ -1,9 +1,6 @@
 package com.example.ansi.controller;
 
-import com.example.ansi.model.CommentModel;
-import com.example.ansi.model.SessionModel;
-import com.example.ansi.model.SubtitleEntry;
-import com.example.ansi.model.UserModel;
+import com.example.ansi.model.*;
 import com.example.ansi.model.search.SearchSubtitleEntryModel;
 import com.example.ansi.repository.*;
 import com.example.ansi.service.SearchService;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost:3000"}, allowedHeaders = "*", allowCredentials = "true")
@@ -59,14 +58,20 @@ public class AdminController {
         SessionModel session = sessionRepository.findById(sessionId);
         if(session == null || !session.getUser().getRole().equals("admin")) {
             body.put("message", "Unauthorized");
-            return Utills.buildResponse(null, 401, "");
+
+            return Utills.buildResponse(body, 401, "");
         }
 
         PageRequest pageReq
                 = PageRequest.of(p-1, 10);
 
         Page<UserModel> results = userRepository.findAll(pageReq);
-        body.put("result", results.getContent());
+
+        List<UserAdminModel> result = results.getContent().stream()
+                .map(UserAdminModel::new)
+                .collect(Collectors.toList());
+
+        body.put("result",result);
         body.put("hasNext", results.hasNext());
 
         return Utills.buildResponse(body, 200, "");
@@ -110,6 +115,15 @@ public class AdminController {
                                           HttpServletRequest request,
                                           HttpServletResponse response) throws UnirestException {
 
+        String sessionId = Utills.getSessionId(request);
+        JSONObject body = new JSONObject();
+
+        SessionModel session = sessionRepository.findById(sessionId);
+        if(session == null || !session.getUser().getRole().equals("admin")) {
+            body.put("message", "Unauthorized");
+            return Utills.buildResponse(body, 401, "");
+        }
+
         q = q == null ? "" : q;
         p = p == null ? 1 : p;
         limit = limit == null ? 10 : limit;
@@ -134,18 +148,21 @@ public class AdminController {
             return Utills.buildResponse(body, 401, "");
         }
 
-        commentRepository.deleteByEntrieId(id);
 
-        SubtitleEntry isDeleted = subtitleRepository.deleteById(id);
+        SubtitleEntry model = subtitleRepository.findById(id);
 
-        if(isDeleted != null) {
-            fileRepository.deleteByFilename(isDeleted.getFilename());
+
+        if(model != null) {
+            commentRepository.deleteByEntrieId(id);
+            subtitleRepository.deleteById(id);
+            fileRepository.deleteByFilename(model.getFilename());
             body.put("message", "Deleted");
+            return Utills.buildResponse(body, 200, "");
         } else {
             body.put("message", "Error deleting entry");
+            return Utills.buildResponse(body, 404, "");
         }
 
-        return Utills.buildResponse(body, 404, "");
     }
 
 
@@ -202,5 +219,8 @@ public class AdminController {
             return Utills.buildResponse(body, 404, "");
         }
     }
+
+
+    //update user
 
 }

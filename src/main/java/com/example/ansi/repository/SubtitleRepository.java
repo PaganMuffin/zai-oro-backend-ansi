@@ -1,13 +1,11 @@
 package com.example.ansi.repository;
 
 import com.example.ansi.model.SubtitleEntry;
-import com.example.ansi.model.search.SearchSubtitleEntryModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 @Transactional
 public interface SubtitleRepository extends JpaRepository<SubtitleEntry, Long> {
 
@@ -15,9 +13,9 @@ public interface SubtitleRepository extends JpaRepository<SubtitleEntry, Long> {
 
     SubtitleEntry findByIdAndUserId (String id, String userId);
 
-    SubtitleEntry deleteById(String id);
+    void deleteById(String id);
 
-    Integer deleteByUserId(String userId);
+    void deleteByUserId(String userId);
     @Modifying
     @Transactional
     @Query("UPDATE SubtitleEntry SET episode = ?2, Description = ?3, author = ?4, filename = ?5, updatedAt = ?6 WHERE id = ?1")

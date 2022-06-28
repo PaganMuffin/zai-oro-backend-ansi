@@ -39,7 +39,6 @@ public class CommentsController {
     public List<CommentModel> getComments(@PathVariable String id) {
         List<CommentModel> comments = commentRepository.findByEntrieId(id);
         return comments;
-
     }
 
     //id is the id of the entry

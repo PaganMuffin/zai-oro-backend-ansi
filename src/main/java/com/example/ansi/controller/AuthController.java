@@ -60,7 +60,7 @@ public class AuthController {
         response.addCookie(cookie);
         cookie.setMaxAge(60 * 60 * 24 * 7);
         cookie.setSecure(true);
-        cookie.setDomain(request.getServerName());
+       // cookie.setDomain(request.getRequestURI());
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         jsonObject.put("message", "User created successfully");
@@ -89,7 +89,7 @@ public class AuthController {
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         cookie.setMaxAge(60 * 60 * 24 * 7);
         cookie.setSecure(true);
-        cookie.setDomain(request.getServerName());
+        //cookie.setDomain(request.getRequestURI());
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         response.addCookie(cookie);
