@@ -64,8 +64,9 @@ public class AuthController {
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         jsonObject.put("message", "User created successfully");
-        jsonObject.put("user", databaseUserModel.getId());
+        jsonObject.put("id", databaseUserModel.getId());
         jsonObject.put("role", databaseUserModel.getRole());
+        jsonObject.put("username", databaseUserModel.getUsername());
         return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
     }
 
@@ -95,9 +96,10 @@ public class AuthController {
         cookie.setHttpOnly(false);
         response.addCookie(cookie);
         jsonObject.put("message", "User logged in successfully");
-        jsonObject.put("user", databaseUserModel.getId());
+        jsonObject.put("id", databaseUserModel.getId());
         jsonObject.put("role", databaseUserModel.getRole());
-        return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
+        jsonObject.put("username", databaseUserModel.getUsername());
+        return Utills.buildResponse(jsonObject, 200, sessionModel.getId());
 
     }
 
