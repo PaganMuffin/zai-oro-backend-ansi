@@ -31,7 +31,7 @@ public class CommentModel {
     private UserModel user;
 
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entry_id", nullable = false)
     @JsonIgnore
     private SubtitleEntry entrie;

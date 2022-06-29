@@ -50,7 +50,7 @@ public abstract class BaseSeriesModel<T extends BaseSeriesModel> {
 
     @Setter
     @Getter
-    protected String type;
+    protected String format;
 
     @Setter
     @Getter

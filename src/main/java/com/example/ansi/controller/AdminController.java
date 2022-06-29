@@ -45,12 +45,12 @@ public class AdminController {
     private FileRepository fileRepository;
 
     @GetMapping("/admin/users")
-    public ResponseEntity<?>  AdminUsers( @RequestParam(required = false) Integer p,
+    public ResponseEntity<?>  AdminUsers(@RequestParam(required = false) String q, @RequestParam(required = false) Integer p,
                                           HttpServletRequest request,
                                           HttpServletResponse response) {
 
         p = p == null ? 1 : p;
-
+        q = q == null ? "" : q;
         //CHECK IF USER IS ADMIN
         String sessionId = Utills.getSessionId(request);
         JSONObject body = new JSONObject();
@@ -65,7 +65,7 @@ public class AdminController {
         PageRequest pageReq
                 = PageRequest.of(p-1, 10);
 
-        Page<UserModel> results = userRepository.findAll(pageReq);
+        Page<UserModel> results = userRepository.findAllByUsernameContaining(q,pageReq);
 
         List<UserAdminModel> result = results.getContent().stream()
                 .map(UserAdminModel::new)
@@ -78,12 +78,13 @@ public class AdminController {
     }
 
     @GetMapping("/admin/comments")
-    public ResponseEntity<?> AdminComments(@RequestParam(required = false) Integer p,
+    public ResponseEntity<?> AdminComments(@RequestParam(required = false) String q,
+                                           @RequestParam(required = false) Integer p,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
 
         p = p == null ? 1 : p;
-
+        q = q == null ? "" : q;
         //CHECK IF USER IS ADMIN
         String sessionId = Utills.getSessionId(request);
         JSONObject body = new JSONObject();
@@ -97,7 +98,7 @@ public class AdminController {
         PageRequest pageReq
                 = PageRequest.of(p-1, 10);
 
-        Page<CommentModel> results = commentRepository.findAll(pageReq);
+        Page<CommentModel> results = commentRepository.findAllBySearch(q,pageReq);
         body.put("result", results.getContent());
         body.put("hasNext", results.hasNext());
 
@@ -202,6 +203,12 @@ public class AdminController {
             body.put("message", "Unauthorized");
             return Utills.buildResponse(body, 401, "Unauthorized");
         }
+
+        if(session.getUser().getId().equals(id)){
+            body.put("message", "You can't delete yourself");
+            return Utills.buildResponse(body, 401, "");
+        }
+
 
         commentRepository.deleteByUserId(id);
         subtitleRepository.deleteByUserId(id);

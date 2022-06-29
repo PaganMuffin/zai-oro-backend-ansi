@@ -30,6 +30,9 @@ public class SearchSubtitleEntryModel extends BaseSubtitleEntry<SearchSubtitleEn
     private String Description;
     @Getter
     private String filename;
+    @Setter
+    @Getter
+    private String uploaderId;
 
     public SearchSubtitleEntryModel() {
     }

@@ -19,6 +19,7 @@ public interface UserRepository extends JpaRepository<UserModel, Long>, PagingAn
 
     Page<UserModel> findAll(Pageable pageable);
 
+    Page<UserModel> findAllByUsernameContaining(String username, Pageable pageable);
     UserModel findByEmail(String email);
 
     Integer deleteById(String id);

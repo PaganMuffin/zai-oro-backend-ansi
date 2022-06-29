@@ -93,7 +93,7 @@ public class SeriesServiceImp implements SeriesService {
             seriesInDB.setSeason(seriesFromAniList.getSeason());
             seriesInDB.setSeasonYear(seriesFromAniList.getSeasonYear());
             seriesInDB.setTitle(seriesFromAniList.getTitle());
-            seriesInDB.setType(seriesFromAniList.getType());
+            seriesInDB.setFormat(seriesFromAniList.getFormat());
             seriesInDB.setCoverImage(seriesFromAniList.getCoverImage());
             seriesInDB.setIdMal(seriesFromAniList.getIdMal());
             seriesRepository.save(seriesInDB);
