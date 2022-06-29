@@ -1,6 +1,7 @@
 package com.example.ansi.controller;
 
 import com.example.ansi.model.AddRequestModel;
+import com.example.ansi.model.EditRequestModel;
 import com.example.ansi.service.SeriesService;
 import com.example.ansi.utills.AniList;
 import com.example.ansi.utills.Utills;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost:3000"}, allowedHeaders = "*", allowCredentials = "true")
 public class SeriesController {
 
     @Autowired
@@ -27,6 +28,11 @@ public class SeriesController {
     @PostMapping("/add")
     public ResponseEntity<?> add(AddRequestModel addRequestModel, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
         return seriesService.add(addRequestModel, file, request, response);
+    }
+
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> edit(EditRequestModel editRequestModel, @RequestParam(value = "file") MultipartFile file, HttpServletRequest request, HttpServletResponse response, @PathVariable String id) throws UnirestException {
+        return seriesService.edit(id, editRequestModel, file, request, response);
     }
 
     @GetMapping("/series/{id}")

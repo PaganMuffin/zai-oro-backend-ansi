@@ -4,6 +4,7 @@ import com.example.ansi.model.SeriesModel;
 import com.example.ansi.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -30,18 +31,23 @@ public abstract class BaseSubtitleEntry<T extends BaseSubtitleEntry> {
     protected Long createdAt;
 
     @Getter
+    @Setter
     protected Long updatedAt;
 
     @Getter
+    @Setter
     protected String author;
 
     @Getter
+    @Setter
     protected Integer episode;
 
     @Getter
+    @Setter
     protected String Description;
 
     @Getter
+    @Setter
     protected String filename;
 
     public BaseSubtitleEntry() {

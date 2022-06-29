@@ -16,6 +16,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,7 +93,7 @@ public class SeriesServiceImp implements SeriesService {
             seriesInDB.setSeason(seriesFromAniList.getSeason());
             seriesInDB.setSeasonYear(seriesFromAniList.getSeasonYear());
             seriesInDB.setTitle(seriesFromAniList.getTitle());
-            seriesInDB.setType(seriesFromAniList.getType());
+            seriesInDB.setFormat(seriesFromAniList.getFormat());
             seriesInDB.setCoverImage(seriesFromAniList.getCoverImage());
             seriesInDB.setIdMal(seriesFromAniList.getIdMal());
             seriesRepository.save(seriesInDB);
@@ -118,6 +119,76 @@ public class SeriesServiceImp implements SeriesService {
 
         return Utills.buildResponse(body, 200, null);
 
+    }
+
+    @Override
+    public ResponseEntity<?> edit(String id, EditRequestModel editRequestModel, MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws UnirestException {
+
+        boolean fileChanged = !editRequestModel.getFileChange().equals("false");
+
+        String sessionId = Utills.getSessionId(request);
+        JSONObject body = new JSONObject();
+
+        if (sessionId == null) {
+            body.put("message", "You are not logged in");
+            return Utills.buildResponse(body, 401, null);
+        }
+
+        String ext = Utills.getFileExtension(file.getOriginalFilename());
+        if (!Utills.ALLOWED_EXTENSIONS.contains(ext)) {
+            body.put("message", "File type not allowed");
+            return Utills.buildResponse(body, 400, null);
+        }
+
+        SessionModel session = sessionRepository.findById(sessionId);
+        if (session == null) {
+            body.put("message", "You are not logged in");
+            return Utills.buildResponse(body, 401, null);
+        }
+
+        //check if entry exists and belongs to user
+        SubtitleEntry subtitleEntry = subtitleRepository.findByIdAndUserId(id, session.getUser().getId());
+        if (subtitleEntry == null) {
+            body.put("message", "Entry not found or not belong to you");
+            return Utills.buildResponse(body, 404, null);
+        }
+
+        subtitleEntry.setDescription(editRequestModel.getDesc());
+        subtitleEntry.setEpisode(editRequestModel.getEpisode());
+        subtitleEntry.setAuthor(editRequestModel.getAuthor());
+        subtitleEntry.setUpdatedAt(Utills.getUnixTime());
+        String oldFileName = subtitleEntry.getFilename();
+
+        if (fileChanged) {
+            //delete old file
+            //upload new file
+
+            FileModel fileModel = new FileModel(file.getOriginalFilename(), session.getUser());
+            fileRepository.save(fileModel);
+
+            String newFileName = fileModel.getId() + "." + ext;
+            Boolean fileSaved = storageService.save(file, newFileName);
+            if (!fileSaved) {
+                body.put("message", "File could not be saved");
+                return Utills.buildResponse(body, 500, null);
+            }
+            subtitleEntry.setFilename(newFileName);
+        }
+
+        subtitleRepository.updateEntry(subtitleEntry.getId(),
+                subtitleEntry.getEpisode(),
+                subtitleEntry.getDescription(),
+                subtitleEntry.getAuthor(),
+                subtitleEntry.getFilename(),
+                subtitleEntry.getUpdatedAt());
+
+        body.put("message", "Entry updated");
+        body.put("id", subtitleEntry.getId());
+        if(fileChanged){
+            storageService.delete(oldFileName);
+        }
+
+        return Utills.buildResponse(body, 200, null);
     }
 
 

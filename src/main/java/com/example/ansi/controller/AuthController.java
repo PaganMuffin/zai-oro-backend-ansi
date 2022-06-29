@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost"}, allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://ansi.localhost:3000", "http://localhost:3000"}, allowedHeaders = "*", allowCredentials = "true")
 public class AuthController {
 
 
@@ -60,11 +60,13 @@ public class AuthController {
         response.addCookie(cookie);
         cookie.setMaxAge(60 * 60 * 24 * 7);
         cookie.setSecure(true);
-        cookie.setDomain(request.getServerName());
+       // cookie.setDomain(request.getRequestURI());
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         jsonObject.put("message", "User created successfully");
-        jsonObject.put("user", databaseUserModel.getId());
+        jsonObject.put("id", databaseUserModel.getId());
+        jsonObject.put("role", databaseUserModel.getRole());
+        jsonObject.put("username", databaseUserModel.getUsername());
         return Utills.buildResponse(jsonObject, 201, sessionModel.getId());
     }
 
@@ -89,26 +91,29 @@ public class AuthController {
         Cookie cookie = new Cookie("sessionId", sessionModel.getId());
         cookie.setMaxAge(60 * 60 * 24 * 7);
         cookie.setSecure(true);
-        cookie.setDomain(request.getServerName());
+        //cookie.setDomain(request.getRequestURI());
         cookie.setPath("/");
         cookie.setHttpOnly(false);
         response.addCookie(cookie);
         jsonObject.put("message", "User logged in successfully");
-        jsonObject.put("user", databaseUserModel.getId());
+        jsonObject.put("id", databaseUserModel.getId());
+        jsonObject.put("role", databaseUserModel.getRole());
+        jsonObject.put("username", databaseUserModel.getUsername());
         return Utills.buildResponse(jsonObject, 200, sessionModel.getId());
 
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody RegisterLoginModel user, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping ("/logout2")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
         String sessionId = Utills.getSessionId(request);
-        Boolean deleted = sessionRepository.deleteById(sessionId);
-        if(!deleted) {
+
+        if(sessionId == null) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "User not logged in");
             return Utills.buildResponse(jsonObject, 401, null);
         }
+        sessionRepository.deleteById(sessionId);
         Cookie cookie = new Cookie("sessionId", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

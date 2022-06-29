@@ -36,7 +36,7 @@ public class AniList {
                             coverImage{
                                 medium
                             }
-                            type
+                            format
                                     season
                             seasonYear
                                     description
@@ -86,7 +86,7 @@ public class AniList {
                             coverImage{
                                 medium
                             }
-                            type
+                            format
                                     season
                             seasonYear
                                     description
@@ -130,7 +130,7 @@ public class AniList {
                       coverImage{
                         medium
                       }
-                      type
+                      format
                       season
                       seasonYear
                       description
