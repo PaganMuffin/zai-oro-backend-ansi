@@ -17,7 +17,9 @@ public class SubsController {
 
     @GetMapping("/view/{id}")
     public SearchSubtitleEntryModel testGet(@PathVariable String id) {
-        return searchRepository.findById(id);
+        SearchSubtitleEntryModel entry = searchRepository.findById(id);
+        entry.setUploaderId(entry.getUser().getId());
+        return entry;
 
     }
 }

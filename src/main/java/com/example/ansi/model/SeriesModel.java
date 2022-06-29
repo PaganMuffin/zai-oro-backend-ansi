@@ -26,12 +26,12 @@ public class SeriesModel extends BaseSeriesModel<SeriesModel> {
     public SeriesModel() {
     }
 
-    public SeriesModel(String season, String description, int alId, int idMal, String type, int seasonYear, int episodes, CoverImage coverImage, Title title) {
+    public SeriesModel(String season, String description, int alId, int idMal, String format, int seasonYear, int episodes, CoverImage coverImage, Title title) {
         this.season = season;
         this.description = description;
         this.alId = alId;
         this.idMal = idMal;
-        this.type = type;
+        this.format = format;
         this.seasonYear = seasonYear;
         this.episodes = episodes;
         this.coverImage = coverImage;

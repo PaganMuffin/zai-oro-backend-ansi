@@ -22,8 +22,8 @@ public class AniListEntry {
 	@SerializedName("title")
 	private Title title;
 
-	@SerializedName("type")
-	private String type;
+	@SerializedName("format")
+	private String format;
 
 	@SerializedName("seasonYear")
 	private int seasonYear;
@@ -55,8 +55,8 @@ public class AniListEntry {
 		return title;
 	}
 
-	public String getType(){
-		return type;
+	public String getFormat(){
+		return format;
 	}
 
 	public int getSeasonYear(){
